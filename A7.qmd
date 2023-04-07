@@ -22,7 +22,7 @@ most_recent_data <- new_data %>%
 
 Date and time of the report
 
-```{r}
+```{r, echo=FALSE}
 Sys.time()
 ```
 
