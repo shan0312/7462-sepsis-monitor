@@ -1,0 +1,73 @@
+---
+title: "ICU status report"
+format: html
+editor: visual
+---
+
+```{r, message=FALSE}
+drive_deauth()
+file_link <- "https://drive.google.com/file/d/1hGMtOT-6TZIk-eFzrpgzxTJBGAj1SEwH/view?usp=share_link"
+new_data <- updateData(file_link)
+
+## Include only most recent data
+most_recent_data <- new_data %>%
+  group_by(PatientID) %>%
+  filter(obsTime == max(obsTime))
+```
+
+Date and time of the report
+
+```{r}
+Sys.time()
+```
+
+Patient who have sepsis right now
+
+```{r}
+most_recent_data %>% filter(SepsisLabel == 1) %>% select(PatientID, HR, Temp, Resp)
+```
+
+Plots for patients who have sepsis
+
+```{r, warning=FALSE}
+# filter in patients who have sepsis
+SepsisPt <- new_data %>% filter(SepsisLabel == 1) %>% select(PatientID) %>% unique() 
+
+new_data %>% filter(PatientID %in% SepsisPt$PatientID) %>% ggplot(aes(x = ICULOS, y = HR)) +
+    geom_line(aes(group = PatientID),
+              alpha = 0.3) +
+    ggtitle("Heart Rate")
+
+new_data %>% filter(PatientID %in% SepsisPt$PatientID) %>% ggplot(aes(x = ICULOS, y = Temp)) +
+    geom_line(aes(group = PatientID),
+              alpha = 0.3) +
+    ggtitle("Temperature")
+
+new_data %>% filter(PatientID %in% SepsisPt$PatientID) %>% ggplot(aes(x = ICULOS, y = Resp)) +
+    geom_line(aes(group = PatientID),
+              alpha = 0.3) +
+    ggtitle("Respiratory Rate")
+```
+
+A table showing change in measurements
+
+```{r}
+new_data %>% 
+    group_by(PatientID) %>% 
+    filter(ICULOS %in% sort(ICULOS)[c(length(ICULOS), (length(ICULOS)-1))]) %>% 
+    select(PatientID, HR, Temp, Resp) %>% 
+    summarise(diff_hr = HR[2]-HR[1],
+              diff_temp = Temp[2]-Temp[1],
+              diff_resp = Resp[2]-Resp[1])
+
+```
+
+
+
+
+
+
+
+
+
+
