@@ -41,6 +41,8 @@ jobs:
                any::readr
                any::lubridate
                any::forcats
+               any::googledrive
+               any::data.table
 
       - name: Render document
         uses: quarto-dev/quarto-actions/render@v2
