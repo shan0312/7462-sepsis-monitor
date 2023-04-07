@@ -5,8 +5,13 @@ editor: visual
 ---
 
 ```{r, message=FALSE}
+library(googledrive)
+library(tidyverse)
+library(data.table) ## For the fread function
+library(lubridate)
 drive_deauth()
 file_link <- "https://drive.google.com/file/d/1hGMtOT-6TZIk-eFzrpgzxTJBGAj1SEwH/view?usp=share_link"
+source("./sepsis_monitor_functions.R")
 new_data <- updateData(file_link)
 
 ## Include only most recent data
