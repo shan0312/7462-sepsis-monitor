@@ -59,13 +59,15 @@ new_data %>% filter(PatientID %in% SepsisPt$PatientID) %>% ggplot(aes(x = ICULOS
 A table showing change in measurements
 
 ```{r}
-new_data %>% 
+Table <- new_data %>% 
     group_by(PatientID) %>% 
     filter(ICULOS %in% sort(ICULOS)[c(length(ICULOS), (length(ICULOS)-1))]) %>% 
     select(PatientID, HR, Temp, Resp) %>% 
     summarise(diff_hr = HR[2]-HR[1],
               diff_temp = Temp[2]-Temp[1],
               diff_resp = Resp[2]-Resp[1])
+     
+ print(Table, n=50)
 
 ```
 
